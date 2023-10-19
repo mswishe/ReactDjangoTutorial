@@ -45,10 +45,10 @@ function Room({leaveRoomCallback}) {
                 <Grid item xs={12} align="center">
                     <CreateRoomPage 
                         update={true} 
-                        votesToSkip={votesToSkip} 
-                        guestCanPause={guestCanPause} 
+                        votesToSkipProp={votesToSkip} 
+                        guestCanPauseProp={guestCanPause} 
                         roomCode={roomCode} 
-                        updateCallback={()=>{}}
+                        updateCallback={getRoomDetails}
                     />
                 </Grid>
                 <Grid item xs={12} align="center">
