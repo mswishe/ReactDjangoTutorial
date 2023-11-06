@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Grid, Button, Typography} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CreateRoomPage from "./CreateRoomPage";
+import MusicPlayer from "./MusicPlayer";
 
 function Room({leaveRoomCallback}) {
     const [votesToSkip, setVotesToSkip] = useState(2);
@@ -10,6 +11,7 @@ function Room({leaveRoomCallback}) {
     const [isHost, setIsHost] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [spotifyAuthenticated, setSpotifyAuthenticated] = useState(false);
+    const [song, setSong] = useState({});
     const {roomCode} = useParams();
     const navigate = useNavigate();
 
@@ -44,6 +46,21 @@ function Room({leaveRoomCallback}) {
                     window.location.replace(data.url);
                 })
             }
+        });
+    };
+
+    const getCurrentSong = () => {
+        fetch('/spotify/current-song')
+        .then((response) => {
+            if(!response.ok) {
+                return {};
+            } else {
+                return response.json();
+            }
+        })
+        .then((data) => {
+            setSong(data);
+            console.log(data);
         });
     };
 
@@ -93,6 +110,11 @@ function Room({leaveRoomCallback}) {
         getRoomDetails();
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(getCurrentSong, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
 
     if(showSettings) {
         return(renderSettings());
@@ -104,21 +126,14 @@ function Room({leaveRoomCallback}) {
                         Code: {roomCode}
                     </Typography>
                 </Grid>
-                <Grid item xs={12} align="center">
-                    <Typography variant="h6" component="h6">
-                        Votes: {votesToSkip}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} align="center">
-                    <Typography variant="h6" component="h6">
-                        Guest Can Pause: {guestCanPause.toString()}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} align="center">
-                    <Typography variant="h6" component="h6">
-                        Host: {isHost.toString()}
-                    </Typography>
-                </Grid>
+                <MusicPlayer 
+                    image_url={song.image_url} 
+                    title={song.title} 
+                    artist={song.artist} 
+                    is_playing={song.is_playing} 
+                    time={song.time} 
+                    duration={song.duration} 
+                />
                 {isHost ? renderSettingsButton() : null}
                 <Grid item xs={12} align="center">
                     <Button variant="contained" color="secondary" onClick={leaveButtonPressed}>
