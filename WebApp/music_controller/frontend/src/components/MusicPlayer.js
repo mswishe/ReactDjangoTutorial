@@ -7,6 +7,22 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 function MusicPlayer({image_url, title, artist, is_playing, time, duration}) {
     const songProgress = (time / duration) * 100;
 
+    const pauseSong = () => {
+        const requestOptions = {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"}
+        };
+        fetch("/spotify/pause", requestOptions);
+    };
+
+    const playSong = () => {
+        const requestOptions = {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"}
+        };
+        fetch("/spotify/play", requestOptions);
+    };
+
     if(title == null) {
         return (<div></div>);
     }
@@ -24,7 +40,9 @@ function MusicPlayer({image_url, title, artist, is_playing, time, duration}) {
                         {artist}
                     </Typography>
                     <div>
-                        <IconButton>
+                        <IconButton onClick={() => {
+                            is_playing ? pauseSong() : playSong();
+                        }}>
                             {is_playing ? <PauseIcon /> : <PlayArrowIcon />}
                         </IconButton>
                         <IconButton>
