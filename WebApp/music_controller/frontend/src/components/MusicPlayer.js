@@ -4,8 +4,16 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 
-function MusicPlayer({image_url, title, artist, is_playing, time, duration}) {
+function MusicPlayer({image_url, title, artist, is_playing, time, duration, votes, votes_required}) {
     const songProgress = (time / duration) * 100;
+
+    const skipeSong = () => {
+        const requestOptions = {
+            method: "POST",
+            headers: {"Content-Type": "application/json"}
+        };
+        fetch("/spotify/skip", requestOptions);
+    }
 
     const pauseSong = () => {
         const requestOptions = {
@@ -45,8 +53,8 @@ function MusicPlayer({image_url, title, artist, is_playing, time, duration}) {
                         }}>
                             {is_playing ? <PauseIcon /> : <PlayArrowIcon />}
                         </IconButton>
-                        <IconButton>
-                            <SkipNextIcon />
+                        <IconButton onClick={() => {skipeSong()}}>
+                            {votes} / {" "}{votes_required} <SkipNextIcon /> 
                         </IconButton>
                     </div>
                 </Grid>

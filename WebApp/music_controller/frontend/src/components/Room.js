@@ -133,6 +133,8 @@ function Room({leaveRoomCallback}) {
                     is_playing={song.is_playing} 
                     time={song.time} 
                     duration={song.duration} 
+                    votes={song.votes}
+                    votes_required={song.votes_required}
                 />
                 {isHost ? renderSettingsButton() : null}
                 <Grid item xs={12} align="center">
